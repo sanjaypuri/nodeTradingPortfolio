@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trading Portfolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body class="bg-dark">
+  <%- include('navbar') %>
+    <div id="customAlert" class="custom-alert w-100, text-center bg-dark fs-3">&nbsp;</div>
+    <div class="container">
+      <h1 class="text-light text-center mb-4">Recording new Sale</h1>
+      <div class="container">
+        <form action="/sell" method="post">
+          <div class="row text-light">
+            <div class="col-md-3"></div>
+            <div class="col-md-6 bg-secondary rounded p-4">
+              <div class="row mb-2">
+                <div class="col-md-4">
+                  <label for="date" class="form-label">Date <span class="text-danger fw-bold">*</span></label>
+                  <input type="date" class="form-control" id="date" name="date" required />
+                </div>
+                <div class="col-md-8">
+                  <div class="mb-2">Share <span class="text-danger fw-bold">*</span></div>
+                  <select class="form-select" id="selectShare" name="selectShare" required readonly>
+                    <option value="0" selected>Open this select menu</option>
+                    <% shares.map((share)=>{ %>
+                      <option value="<%= share.id %>">
+                        <%= share.Name %>
+                      </option>
+                      <% }) %>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-md-4">
+                  <label for="qty" class="form-label">Quantity <span class="text-danger fw-bold">*</span></label>
+                  <input type="number" min="1" step="1" class="form-control" id="qty" name="qty" required />
+                </div>
+                <div class="col-md-4">
+                  <label for="rate" class="form-label">Rate <span class="text-danger fw-bold">*</span></label>
+                  <input type="number" step="0.01" class="form-control" id="rate" name="rate" required />
+                </div>
+                <div class="col-md-4">
+                  <label for="brokrage" class="form-label">Brokrage</label>
+                  <input type="number" step="0.01" class="form-control" id="brokrage" name="brokrage" />
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-md-6">
+                  <div class="mb-2">Portfolios <span class="text-danger fw-bold">*</span></div>
+                  <select class="form-select" name="selectPortfolio" id="selectPortfolio">
+                    <option value="0" selected>Open this select menu</option>
+                    <% portfolios.map((portfolio)=>{ %>
+                      <option value="<%= portfolio.id %>">
+                        <%= portfolio.name %>
+                      </option>
+                      <% }) %>
+                  </select>
+                </div>
+                <div class="col-md-6 mt-4 pt-2">
+                  <button class="btn btn-dark w-100" type="submit" id="submitbutton">Save</button>
+                </div>
+              </div>
+              <div class="row">
+                <div style="font-size: 0.75rem;" class="col-md-6 text-danger fw-bold">* Mandatory Fields</div>
+              </div>
+            </div>
+            <div class="col-md-3"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"></script>
+    <script>
+
+      function showAlert(message) {
+        const alertContainer = document.getElementById('customAlert');
+        alertContainer.textContent = message;
+        alertContainer.style.color = "red"; // Show the alert
+
+        // Automatically hide the alert after 2000 milliseconds (2 seconds)
+        setTimeout(function () {
+          alertContainer.style.color = '#212529'; // Hide the alert
+        }, 2000);
+      };
+
+      function validateForm() {
+        const selectedshare = document.getElementById('selectShare').value;
+        const selectedportfolio = document.getElementById('selectPortfolio').value;
+        if (selectedshare == "0") {
+          showAlert("Please select a share");
+          return false;
+        }
+        if (selectedportfolio == "0") {
+          showAlert("Please select a portfolio");
+          return false;
+        }
+        return true;
+      };
+
+      document.getElementById("submitbutton").addEventListener('click', function (event) {
+        if (!validateForm()) {
+          event.preventDefault();
+        }
+      });
+    </script>
+</body>
+
+</html>
