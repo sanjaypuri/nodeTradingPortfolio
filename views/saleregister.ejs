@@ -46,7 +46,11 @@
               <td class="text-end"><%= (row.sellvalue).toFixed(2) %></td>
               <td class="text-end"><%= (row.sellcost).toFixed(2) %></td>
               <td class="text-end"><%= (row.sellavg).toFixed(2) %></td>
-              <td class="text-end"><%= (row.gain).toFixed(2) %></td>
+              <% if(row.gain >= 0){ %>
+                <td class="text-end text-success"><%= (row.gain).toFixed(2) %></td>
+                <% }else{ %>
+                  <td class="text-end text-danger"><%= (row.gain).toFixed(2) %></td>
+              <% } %>
             </tr>
           <% }) %>
         </tbody>

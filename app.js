@@ -113,7 +113,7 @@ app.get('/showportfolio', (request, response) => {
     sum(f.buyqty) buyqty, (sum(f.buyqty*f.buyrate)+sum(f.buybrokrage))/sum(f.buyqty) buyavg, 
     sum(f.buyqty*f.buyrate)+sum(f.buybrokrage) buycost, sum(f.sellqty) sellqty, 
     ifnull((sum(f.sellqty*f.sellrate)+sum(f.sellbrokrage))/sum(f.sellqty),0) sellavg,
-    sl.price, (sum(f.buyqty)-sum(f.sellqty))*sl.price marketvalue, sl.temp changepercent, 
+    sl.price, (sum(f.buyqty)-sum(f.sellqty))*sl.price marketvalue, sl.temp changepercent, sl.Change, 
     (sl.price-sl.previous)*(sum(f.buyqty)-sum(f.sellqty)) daygain,
     (sl.price-((sum(f.buyqty*f.buyrate)+sum(f.buybrokrage))/sum(f.buyqty)))*(sum(f.buyqty)-sum(f.sellqty)) gain
     from
