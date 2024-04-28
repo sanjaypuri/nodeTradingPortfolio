@@ -9,9 +9,10 @@
   <body class="bg-dark">
     <%- include('navbar') %>
     <div class="container pt-4">
-      <h2 class="text-center text-light">Portfolio : <%= rows[0].portfolioname%></h2>
+      <h3 class="text-center text-light">Portfolio : <%= userData.name %></h3>
+      <h3 class="text-center text-light">Value : <%= (rows[0].tvalue).toFixed(2) %></h3>
       <h3 class="row">
-        <div class="col text-light">Total Gain: <%= (rows[0].ttotalgain).toFixed(2) %></div>
+        <div class="col text-light">Total Gain: <%= (rows[0].tgain).toFixed(2) %></div>
         <div class="col text-light text-end">Day Gain: <%= (rows[0].tdaygain).toFixed(2) %></div>
       </h3  >
       <table class="table table-dark table-striped">
@@ -39,7 +40,7 @@
               <th><%= (row.marketvalue).toFixed(2) %></th>
               <th><%= row.changepercent %></th>
               <th><%= (row.daygain).toFixed(2) %></th>
-              <th><%= (row.totalgain).toFixed(2) %></th>
+              <th><%= (row.tgain).toFixed(2) %></th>
             </tr>
           <% }) %>
         </tbody>

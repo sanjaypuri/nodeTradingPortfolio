@@ -52,15 +52,9 @@
               </div>
               <div class="row mb-2">
                 <div class="col-md-6">
-                  <div class="mb-2">Portfolios <span class="text-danger fw-bold">*</span></div>
-                  <select class="form-select" name="selectPortfolio" id="selectPortfolio">
-                    <option value="0" selected>Open this select menu</option>
-                    <% portfolios.map((portfolio)=>{ %>
-                      <option value="<%= portfolio.id %>">
-                        <%= portfolio.name %>
-                      </option>
-                      <% }) %>
-                  </select>
+                  <label for="portfolio" class="form-label">Portfolio</label>
+                  <input type="text" class="form-control" id="portfolioname" name="portfolioname" value="<%= userData.name %>" readonly/>
+                  <input type="text" class="form-control d-none" id="portfolioid" name="portfolioid" value="<%= userData.id %>" />
                 </div>
                 <div class="col-md-6 mt-4 pt-2">
                   <button class="btn btn-dark w-100" type="submit" id="submitbutton">Save</button>

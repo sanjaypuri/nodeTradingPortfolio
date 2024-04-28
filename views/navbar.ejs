@@ -9,11 +9,15 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="/newportfolio">New Portfolio</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="/shareslist">List of Shares</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Portfolios
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/newportfolio">Add new Portfolio</a></li>
+            <li><a class="dropdown-item" href="/selectportfolio">Select Portfolio</a></li>
+            <li><a class="dropdown-item" href="/showportfolio">Show Portfolio</a></li>
+          </ul>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -23,6 +27,18 @@
             <li><a class="dropdown-item" href="/buy">Record Purchase</a></li>
             <li><a class="dropdown-item" href="/selllist">Record Sale</a></li>
           </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Reports
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/buyregister">Purchase Register</a></li>
+            <li><a class="dropdown-item" href="/sellregister">Sale Register</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/shareslist">List of Shares</a>
         </li>
       </ul>
     </div>

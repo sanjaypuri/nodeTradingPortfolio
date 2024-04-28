@@ -25,21 +25,14 @@
                   <input type="date" class="form-control" id="date" name="date" required />
                 </div>
                 <div class="col-md-8">
-                  <div class="mb-2">Share <span class="text-danger fw-bold">*</span></div>
-                  <select class="form-select" id="selectShare" name="selectShare" required readonly>
-                    <option value="0" selected>Open this select menu</option>
-                    <% shares.map((share)=>{ %>
-                      <option value="<%= share.id %>">
-                        <%= share.Name %>
-                      </option>
-                      <% }) %>
-                  </select>
+                  <label for="share" class="form-label">Share <span class="text-danger fw-bold">*</span></label>
+                  <input type="text" class="form-control" id="share" name="share" readonly value="<%= row.sharename %>" />
                 </div>
               </div>
               <div class="row mb-2">
                 <div class="col-md-4">
                   <label for="qty" class="form-label">Quantity <span class="text-danger fw-bold">*</span></label>
-                  <input type="number" min="1" step="1" class="form-control" id="qty" name="qty" required />
+                  <input type="number" min="1" max="<%= qtyinhand %>" value="<%= qtyinhand %>" step="1" class="form-control" id="qty" name="qty" required />
                 </div>
                 <div class="col-md-4">
                   <label for="rate" class="form-label">Rate <span class="text-danger fw-bold">*</span></label>
@@ -52,15 +45,8 @@
               </div>
               <div class="row mb-2">
                 <div class="col-md-6">
-                  <div class="mb-2">Portfolios <span class="text-danger fw-bold">*</span></div>
-                  <select class="form-select" name="selectPortfolio" id="selectPortfolio">
-                    <option value="0" selected>Open this select menu</option>
-                    <% portfolios.map((portfolio)=>{ %>
-                      <option value="<%= portfolio.id %>">
-                        <%= portfolio.name %>
-                      </option>
-                      <% }) %>
-                  </select>
+                  <label for="portfolio" class="form-label">Portfolio <span class="text-danger fw-bold">*</span></label>
+                  <input type="portfolio" class="form-control" id="portfolio" name="portfolio" readonly value="<%= row.portfolioname %>" />
                 </div>
                 <div class="col-md-6 mt-4 pt-2">
                   <button class="btn btn-dark w-100" type="submit" id="submitbutton">Save</button>
@@ -72,6 +58,8 @@
             </div>
             <div class="col-md-3"></div>
           </div>
+          <input type="text" class="form-control d-none" id="buyid" name="buyid" value="<%= buyid %>" />
+          <input type="text" class="form-control d-none" id="portfolioid" name="portfolioid" value="<%= row.portfolioid %>" />
         </form>
       </div>
     </div>
