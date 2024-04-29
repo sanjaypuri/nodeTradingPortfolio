@@ -17,10 +17,16 @@
         <div class="col-md-4">
           <input type="text" class="form-control" id="filterShare" onkeyup="filtershare()">
         </div>
-        <div class="col-md-6 text-light text-end">
-          Total Realized Gain: <%= (rows[0].tgain).toFixed(2) %>
-        </div>
-      </div>
+        <% if(rows[0].tgain>=0){ %>
+          <div class="col-md-6 text-success text-end fs-2">
+            Total Realized Gain: <%= (+(Math.round(100*(rows[0].tgain))/100).toFixed(2)).toLocaleString('en-in',{minimumFractionDigits: 2, maximumFractionDigits: 2}) %>
+          </div>
+          <% }else{ %>
+            <div class="col-md-6 text-danger text-end fs-2">
+              Total Realized Gain: <%= (+(Math.round(100*(rows[0].tgain))/100).toFixed(2)).toLocaleString('en-in',{minimumFractionDigits: 2, maximumFractionDigits: 2}) %>
+            </div>
+            <% } %>
+          </div>
     <table class="table table-dark table-striped" id="myTable">
         <thead>
           <tr>
@@ -41,15 +47,15 @@
               <td><%= row.tdate %></td>
               <td><%= row.Name %></td>
               <td class="text-end"><%= parseInt(row.qty) %></td>
-              <td class="text-end"><%= (row.rate).toFixed(2) %></td>
+              <td class="text-end"><%= (+(Math.round(100*(row.rate))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
               <td class="text-end"><%= (row.brokrage).toFixed(2) %></td>
-              <td class="text-end"><%= (row.sellvalue).toFixed(2) %></td>
-              <td class="text-end"><%= (row.sellcost).toFixed(2) %></td>
-              <td class="text-end"><%= (row.sellavg).toFixed(2) %></td>
+              <td class="text-end"><%= (+(Math.round(100*(row.sellvalue))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
+              <td class="text-end"><%= (+(Math.round(100*(row.sellcost))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
+              <td class="text-end"><%= (+(Math.round(100*(row.sellavg))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
               <% if(row.gain >= 0){ %>
-                <td class="text-end text-success"><%= (row.gain).toFixed(2) %></td>
+                <td class="text-end text-success"><%= (+(Math.round(100*(row.gain))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
                 <% }else{ %>
-                  <td class="text-end text-danger"><%= (row.gain).toFixed(2) %></td>
+                  <td class="text-end text-danger"><%= (+(Math.round(100*(row.gain))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
               <% } %>
             </tr>
           <% }) %>

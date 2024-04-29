@@ -58,7 +58,8 @@ app.post('/selectportfolio', (request, response) => {
       }
       response.render('errorpage', { errormsg });
     } else {
-      response.cookie('userData', { id: portfolio.id, name: portfolio.name });
+      console.log(portfolio);
+      response.cookie('userData', { id: portfolioid, name: portfolio.name });
       response.redirect('/');
     }
   });

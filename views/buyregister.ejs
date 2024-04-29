@@ -37,11 +37,11 @@
               <td><%= row.tdate %></td>
               <td><%= row.Name %></td>
               <td class="text-end"><%= parseInt(row.qty) %></td>
-              <td class="text-end"><%= (row.rate).toFixed(2) %></td>
+              <td class="text-end"><%= (+(Math.round(100*(row.rate))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
               <td class="text-end"><%= (row.brokrage).toFixed(2) %></td>
-              <td class="text-end"><%= (row.buyvalue).toFixed(2) %></td>
-              <td class="text-end"><%= (row.buycost).toFixed(2) %></td>
-              <td class="text-end"><%= (row.buyavg).toFixed(2) %></td>
+              <td class="text-end"><%= (+(Math.round(100*(row.buyvalue))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
+              <td class="text-end"><%= (+(Math.round(100*(row.buycost))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
+              <td class="text-end"><%= (+(Math.round(100*(row.buyavg))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
             </tr>
           <% }) %>
         </tbody>
