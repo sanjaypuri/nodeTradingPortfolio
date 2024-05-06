@@ -100,6 +100,9 @@ app.post('/newportfolio', (request, response) => {
 
 app.get('/showportfolio', (request, response) => {
   const userData = request.cookies.userData;
+  if (!userData){
+    response.redirect('/');
+  }
   let sql = `select
   *,
 	buyqty-sellqty qtyinhand,
@@ -159,6 +162,9 @@ app.get('/showportfolio', (request, response) => {
 
 app.get('/buy', (request, response) => {
   const userData = request.cookies.userData;
+  if (!userData){
+    response.redirect('/');
+  }
   let sql = `SELECT id, name from shareslist order by name`;
   db.all(sql, (error, shares) => {
     if (error) {
@@ -196,6 +202,9 @@ app.post('/buy', (request, response) => {
 
 app.get('/selllist', (request, response) => {
   const userData = request.cookies.userData;
+  if (!userData){
+    response.redirect('/');
+  }
   const sql = `   SELECT * FROM 
                   (
                   SELECT
@@ -266,6 +275,9 @@ app.post('/sell', (request, response) => {
 
 app.get('/buyregister', (request, response) => {
   const userData = request.cookies.userData;
+  if (!userData){
+    response.redirect('/');
+  }
     const sql = `SELECT
                     b.tdate,
                     sl.name,
@@ -302,6 +314,9 @@ app.get('/buyregister', (request, response) => {
 
 app.get('/sellregister', (request, response) => {
   const userData = request.cookies.userData;
+  if (!userData){
+    response.redirect('/');
+  }
     const sql = `SELECT
                     s.tdate,
                     sl.Name,
