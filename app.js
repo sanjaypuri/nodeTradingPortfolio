@@ -24,6 +24,7 @@ app.get('/', (request, response) => {
 });
 
 app.get('/selectportfolio', (request, response) => {
+  const userData = request.cookies.userData;
   const sql = `SELECT * FROM portfolios`;
   db.all(sql, (error, portfolios) => {
     if (error) {
@@ -40,7 +41,7 @@ app.get('/selectportfolio', (request, response) => {
           response.cookie('userData', { 'id': portfolios[0].id, 'name': portfolios[0].name });
           response.redirect('/');
         } else {
-          response.render('selectportfolio', { portfolios })
+          response.render('selectportfolio', { portfolios, userData })
         }
       }
     }
@@ -80,7 +81,8 @@ app.get('/shareslist', (request, response) => {
 });
 
 app.get('/newportfolio', (request, response) => {
-  response.render('newportfolio', {});
+  const userData = request.cookies.userData;
+  response.render('newportfolio', {userData});
 });
 
 app.post('/newportfolio', (request, response) => {

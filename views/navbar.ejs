@@ -41,6 +41,13 @@
           <a class="nav-link active" href="/shareslist">List of Shares</a>
         </li>
       </ul>
+      <div class="d-flex">
+        <% if(!userData) { %>
+          <span class="text-light me-3">No Portfolio Selected</span>
+          <% } else { %>
+            <span class="text-light me-3">Portfolio: <%= userData.name %></span>
+        <% } %>
+      </div>
     </div>
   </div>
 </nav>
