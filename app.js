@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.set('view engine', 'ejs');
 
-const PORT = 5000;
+const PORT = 4500;
 
 app.get('/', (request, response) => {
   // notifier.notify('Message')
@@ -150,7 +150,15 @@ app.get('/showportfolio', (request, response) => {
       response.render('errorpage', { errormsg });
     } else {
       if (rows.length > 0) {
-        response.render('showportfolio', { rows, userData });
+        let totalBuy = 0;
+        let totalDayGain = 0;
+        let totalGain = 0;
+        for(i=0; i<rows.length; i++){
+          totalBuy += rows[i].buycost;
+          totalDayGain += rows[i].daygain;
+          totalGain += rows[i].gain;
+        }
+        response.render('showportfolio', { rows, userData, totalBuy, totalGain, totalDayGain });
       } else {
         const errormsg = {
           type: "Empty Portfolio",
