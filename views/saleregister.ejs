@@ -42,9 +42,13 @@
           </tr>
         </thead>
         <tbody>
+          <% var enddate = '' %>
+          <% var startdate = '' %>
           <% rows.map((row)=>{ %>
+            <% enddate = new Date(row.selldate) %>
+            <% startdate = new Date(row.buydate) %>
             <tr>
-              <td><%= row.tdate %></td>
+              <td><%= row.selldate %></td>
               <td><%= row.Name %></td>
               <td class="text-end"><%= parseInt(row.qty) %></td>
               <td class="text-end"><%= (+(Math.round(100*(row.rate))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
@@ -53,9 +57,23 @@
               <td class="text-end"><%= (+(Math.round(100*(row.sellcost))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
               <td class="text-end"><%= (+(Math.round(100*(row.sellavg))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
               <% if(row.gain >= 0){ %>
-                <td class="text-end text-success"><%= (+(Math.round(100*(row.gain))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
+                <td class="text-end text-success">
+                  <%= (+(Math.round(100*(row.gain))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %>
+                  <span style="font-size:0.7rem">
+                    <br>Profit 
+                      <%= (row.gain*100/row.buycost).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %>% in 
+                      <%= (enddate.getTime()-startdate.getTime())/(1000 * 3600 * 24) %> days
+                  </span>
+                </td>
                 <% }else{ %>
-                  <td class="text-end text-danger"><%= (+(Math.round(100*(row.gain))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
+                  <td class="text-end text-danger">
+                    <%= (-1*(Math.round(100*(row.gain))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %>
+                    <span style="font-size:0.7rem">
+                      <br>Loss 
+                        <%= (-1*row.gain*100/row.buycost).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %>% in
+                        <%= (enddate.getTime()-startdate.getTime())/(1000 * 3600 * 24) %> days
+                    </span>
+                  </td>
               <% } %>
             </tr>
           <% }) %>

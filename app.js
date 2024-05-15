@@ -328,16 +328,18 @@ app.get('/sellregister', (request, response) => {
     response.redirect('/');
   }
     const sql = `SELECT
-                    s.tdate,
+                    s.tdate selldate,
+                    b .tdate buydate,
                     sl.Name,
                     s.qty,
                     s.rate,
                     s.brokrage,
                     s.qty*s.rate sellvalue,
                     (s.qty*s.rate)-s.brokrage sellcost,
+                    (b.qty*b.rate)+b.brokrage buycost,
                     ((s.qty*s.rate)-b.brokrage)/s.qty sellavg,
                     (s.rate-b.rate)*s.qty gain,
-                    SUM((s.rate-b.rate)*s.qty) OVER (PARTITION BY b.portfolioid) tgain
+                    SUM((((s.qty*s.rate)-s.brokrage)-((b.qty*b.rate)+b.brokrage))) OVER (PARTITION BY b.portfolioid) tgain
                     FROM sell s
                   LEFT JOIN buy b ON b.id = s.buyid
                   LEFT JOIN shareslist sl on sl.id = b.shareid
