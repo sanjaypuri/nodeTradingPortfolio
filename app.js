@@ -339,7 +339,7 @@ app.get('/sellregister', (request, response) => {
                     (b.qty*b.rate)+b.brokrage buycost,
                     ((s.qty*s.rate)-b.brokrage)/s.qty sellavg,
                     (s.rate-b.rate)*s.qty gain,
-                    SUM((((s.qty*s.rate)-s.brokrage)-((b.qty*b.rate)+b.brokrage))) OVER (PARTITION BY b.portfolioid) tgain
+                    SUM((s.rate-b.rate)*s.qty) OVER (PARTITION BY b.portfolioid) tgain
                     FROM sell s
                   LEFT JOIN buy b ON b.id = s.buyid
                   LEFT JOIN shareslist sl on sl.id = b.shareid
