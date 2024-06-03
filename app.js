@@ -1,9 +1,10 @@
 const express = require('express');
+const fs = require('fs');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const notifier = require('node-notifier');
 const db = require('./database');
-const { render } = require('ejs');
+const { render, resolveInclude } = require('ejs');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -237,12 +238,13 @@ app.get('/selllist', (request, response) => {
       }
       response.render('errorpage', { errormsg });
     } else {
-      response.render('selllist', { shares });
+      response.render('selllist', { shares, userData });
     }
   });
 });
 
 app.get('/sell/:buyid/:qtyinhand', (request, response) => {
+  const userData = request.cookies.userData;
   const buyid = parseInt(request.params.buyid);
   const qtyinhand = parseInt(request.params.qtyinhand);
   const sql = `SELECT b.shareid, sl.Name sharename, b.portfolioid, p.name portfolioname FROM buy b
@@ -257,7 +259,7 @@ app.get('/sell/:buyid/:qtyinhand', (request, response) => {
       }
       response.render('errorpage', { errormsg });
     } else {
-      response.render('sell', { row, buyid, qtyinhand });
+      response.render('sell', { row, buyid, qtyinhand, userData });
     }
   });
 });
