@@ -33,11 +33,15 @@
           <div class="col text-success text-end">
             Day Gain: <%= (+(Math.round(100*(rows[0].tdaygain))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %>
             <span style="font-size:0.8rem">
-              <%= (totalDayGain*100/totalBuy).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %>%
+              <%= (rows[0].tdaygain*100/totalBuy).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %>%
             </span>
           </div>
           <% }else{ %>
-            <div class="col text-danger text-end">Day Gain: <%= (+(Math.round(100*(rows[0].tdaygain))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></div>
+            <div class="col text-danger text-end">Day Gain: <%= (+(Math.round(100*(rows[0].tdaygain))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %>
+            <span style="font-size:0.8rem">
+              <%= (rows[0].tdaygain*100/totalBuy).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %>%
+            </span>
+            </div>
         <% } %>
       </h3  >
       <table class="table table-dark table-striped">
