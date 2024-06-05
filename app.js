@@ -67,6 +67,10 @@ app.post('/selectportfolio', (request, response) => {
 });
 
 app.get('/shareslist', (request, response) => {
+  const userData = request.cookies.userData;
+  if (!userData){
+    response.redirect('/');
+  }
   const sql = `SELECT * FROM shareslist ORDER BY Name`;
   db.all(sql, (error, shares) => {
     if (error) {
@@ -76,7 +80,7 @@ app.get('/shareslist', (request, response) => {
       }
       response.render('errorpage', { errormsg });
     } else {
-      response.render('shareslist', { shares });
+      response.render('shareslist', { shares, userData });
     }
   });
 });
