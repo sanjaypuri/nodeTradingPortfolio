@@ -1,0 +1,13 @@
+select Name, sum(cost) cost, sum(profit) profit, sum(cost+profit) value, sum(sum(cost+profit)) over () totalvalue from
+(SELECT
+	b.id, s.Name, b.qty-ifnull(sellqty,0) qty, b.rate, s.price, b.rate*(b.qty-ifnull(sellqty,0)) cost,
+	(s.price-b.rate)*b.qty-ifnull(sellqty,0) profit
+FROM buy b
+left join (SELECT
+	s.buyid, sum(s.qty) sellQty
+FROM sell s
+group by s.buyid) x on x.buyid = b.id
+left join shareslist s on s.id = b.shareid
+WHERE b.portfolioid = 1 and  b.qty-ifnull(sellqty,0) > 0 and s.price > b.rate
+)
+group by Name

@@ -372,6 +372,40 @@ app.get('/sellregister', (request, response) => {
   });
 });
 
+app.get('/liquidity', (request, response)=>{
+  const userData = request.cookies.userData;
+  if (!userData){
+    response.redirect('/');
+  }
+  let sql = `select Name, sum(cost) cost, sum(profit) profit, sum(cost+profit) value, 
+              sum(sum(cost)) over () totalcost,
+              sum(sum(profit)) over () totalprofit,
+              sum(sum(cost+profit)) over () totalvalue from
+              (SELECT
+                b.id, s.Name, b.qty-ifnull(sellqty,0) qty, b.rate, s.price, b.rate*(b.qty-ifnull(sellqty,0)) cost,
+                (s.price-b.rate)*b.qty-ifnull(sellqty,0) profit
+              FROM buy b
+              left join (SELECT
+                s.buyid, sum(s.qty) sellQty
+              FROM sell s
+              group by s.buyid) x on x.buyid = b.id
+              left join shareslist s on s.id = b.shareid
+              WHERE b.portfolioid = ? and  b.qty-ifnull(sellqty,0) > 0 and s.price > b.rate
+              )
+              group by Name`;
+  db.all(sql, userData.id, (error, rows)=>{
+    if(error){
+      const errormsg = {
+        type: "Error computing portfolio",
+        details: error.message
+      }
+      response.render('errorpage', { errormsg, userData });
+    } else {
+        response.render('liquidity', {rows, userData});
+    }
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running at port ${PORT}`);
 });
