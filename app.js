@@ -406,6 +406,103 @@ app.get('/liquidity', (request, response)=>{
   });
 });
 
+app.get('/earnings', (request, response) => {
+  const userData = request.cookies.userData;
+  if (!userData){
+    response.redirect('/');
+  }
+    let sql = `SELECT
+                  distinct x.finstart||' to '|| cast(cast(substr(finstart, 1, 4) AS INTEGER)+1 as STRING)||'-03-31' finyear
+                FROM
+                (
+                  SELECT
+                    distinct tdate, 
+                    iif(cast(substr(tdate,6,2) AS INTEGER)<4, cast(cast(substr(tdate, 1, 4) AS INTEGER)-1 as text)||'-04-01', substr(tdate, 1, 4)||'-04-01') finstart 
+                  FROM sell
+                  order by tdate
+                )x `;
+  db.all(sql, (error, years) => {
+    if (error) {
+      const errormsg = {
+        type: "Error calculating Financial Years",
+        details: error.message
+      }
+      response.render('errorpage', { errormsg });
+    } else {
+      response.render('earnings', { years, userData });
+    }
+  });
+});
+
+app.post('/earningsreport', (request, response) => {
+  const userData = request.cookies.userData;
+  const fy = request.body.fy;
+  const fyfrom = fy.slice(0, 10)
+  const fyto = fy.slice(14)
+  let sql = `SELECT
+                  *,
+                  sum(buyValue) over () totalBuy,
+                  sum(sellValue) over () totalSell,
+                  sum(GrossGain) over () totalGrossGain,
+                  sum(NetGain) over () totalNetGain
+                FROM
+                (
+                  SELECT
+                    *, 
+                    round(iif(sellQty is null, 0, sellValue-buyValue),2) Grossgain,
+                    round(iif(sellQty is null, 0, sellValue-buyValue-buyBrokrage-sellBrokrage),2) NetGain
+                  FROM
+                  (
+                    SELECT
+                      b.tdate buyDate, l.Name, b.qty buyQty, b.rate buyRate, round(b.rate*b.qty,2) buyValue, b.brokrage buyBrokrage,
+                      s.sellDate, s.sellQty, s.sellRate, s.SellValue, s.sellBrokrage
+                    FROM buy b
+                    LEFT JOIN shareslist l ON l.id = b.shareid
+                    LEFT JOIN
+                    (
+                      SELECT
+                        buyid, tdate sellDate, sum(qty) sellQty, round(sum(rate*qty)/sum(qty),2) sellRate, sum(rate*qty) sellValue, sum(brokrage) sellBrokrage 
+                      FROM sell
+                      GROUP BY buyid
+                    ) s ON s.buyid = b.id
+                    WHERE b.portfolioid = ? and (sellDate between ? and ? OR sellDate is null)
+                  )
+                )
+                ORDER BY sellDate`;
+  db.all(sql, [userData.id, fyfrom, fyto], (error, rows)=>{
+    if(error){
+      const errormsg = {
+        type: "Error getting Earnings Report",
+        details: error.message
+      }
+      response.render('errorpage', { errormsg, userData });
+    } else {
+      let sql = `SELECT
+                  distinct x.finstart||' to '|| cast(cast(substr(finstart, 1, 4) AS INTEGER)+1 as STRING)||'-03-31' finyear
+                FROM
+                (
+                  SELECT
+                    distinct tdate, 
+                    iif(cast(substr(tdate,6,2) AS INTEGER)<4, cast(cast(substr(tdate, 1, 4) AS INTEGER)-1 
+                    as text)||'-04-01', substr(tdate, 1, 4)||'-04-01') finstart 
+                  FROM sell
+                  order by tdate
+                )x `;
+      db.all(sql, (error, years) => {
+        if(error){
+          const errormsg = {
+            type: "Error calculating Financial Years",
+            details: error.message
+          }
+          response.render('errorpage', { errormsg });
+        } else {
+          response.render('earningsreport', {userData, rows, years, fy})
+        }
+      });
+    }
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running at port ${PORT}`);
 });
