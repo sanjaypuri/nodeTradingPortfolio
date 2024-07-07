@@ -468,8 +468,9 @@ app.post('/earningsreport', (request, response) => {
                     WHERE b.portfolioid = ? and (sellDate between ? and ? OR sellDate is null)
                   )
                 )
+                where buyDate < ?
                 ORDER BY sellDate`;
-  db.all(sql, [userData.id, fyfrom, fyto], (error, rows)=>{
+  db.all(sql, [userData.id, fyfrom, fyto, fyto], (error, rows)=>{
     if(error){
       const errormsg = {
         type: "Error getting Earnings Report",
