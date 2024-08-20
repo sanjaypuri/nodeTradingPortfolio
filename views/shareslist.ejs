@@ -14,24 +14,20 @@
         <thead>
           <tr>
             <th>Share</th>
-            <th>Previous Price</th>
-            <th>Current Price</th>
-            <th>High</th>
-            <th>Low</th>
-            <th>Change</th>
-            <th>Change %</th>
+            <th class="text-end">Previous Price</th>
+            <th class="text-end">Current Price</th>
+            <th class="text-end">Change</th>
+            <th class="text-end">Change %</th>
           </tr>
         </thead>
         <tbody>
-          <% shares.map((share)=>{ %>
+          <% latestRates.map((share)=>{ %>
             <tr>
-              <th><%= share.Name %></th>
-              <td><%= share.Previous %></td>
-              <td><%= share.Price %></td>
-              <td><%= share.High %></td>
-              <td><%= share.Low %></td>
-              <td><%= share.Change %></td>
-              <td><%= share.temp %></td>
+              <th><%= share.symbol %></th>
+              <td class="text-end"><%= (share.rate-share.change).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
+              <td class="text-end"><%= (share.rate).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
+              <td class="text-end"><%= (share.change).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></td>
+              <td class="text-end"><%= share.changepct %></td>
             </tr>
             <% }) %>
         </tbody>

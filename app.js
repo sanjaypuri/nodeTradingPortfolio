@@ -66,23 +66,25 @@ app.post('/selectportfolio', (request, response) => {
   });
 });
 
-app.get('/shareslist', (request, response) => {
+app.get('/shareslist', async (request, response) => {
   const userData = request.cookies.userData;
   if (!userData){
     response.redirect('/');
   }
-  const sql = `SELECT * FROM shareslist ORDER BY Name`;
-  db.all(sql, (error, shares) => {
-    if (error) {
-      const errormsg = {
-        type: "Error reading Shares List",
-        details: error.message
-      }
-      response.render('errorpage', { errormsg });
-    } else {
-      response.render('shareslist', { shares, userData });
-    }
-  });
+  const latestRates = await getLatestRates();
+  // response.send(latestRates);
+  // const sql = `SELECT * FROM shareslist ORDER BY Name`;
+  // db.all(sql, (error, shares) => {
+  //   if (error) {
+  //     const errormsg = {
+  //       type: "Error reading Shares List",
+  //       details: error.message
+  //     }
+  //     response.render('errorpage', { errormsg });
+  //   } else {
+      response.render('shareslist', { latestRates, userData });
+  //   }
+  // });
 });
 
 app.get('/newportfolio', (request, response) => {
@@ -105,11 +107,27 @@ app.post('/newportfolio', (request, response) => {
   });
 });
 
-app.get('/showportfolio', (request, response) => {
+const getLatestRates = async () => {
+  try{
+    const response = fetch('https://script.google.com/macros/s/AKfycbyEoM2TW2MD5ITubEnZeEu2SkKZ6wBwopmKbx6mpJVwJWUdk1bHYDZpXWou8y21bcQp9g/exec?action=getRates');
+    // if(!response.ok){
+    //   throw new Error("Error getting latest Rates");
+    // }
+    const data = (await response).json();
+    return data;
+  }
+  catch(error){
+    console.log("Error", error);
+  };
+};
+
+app.get('/showportfolio', async (request, response) => {
   const userData = request.cookies.userData;
   if (!userData){
     response.redirect('/');
   }
+  const latestRates = await getLatestRates();
+  // response.send(latestRates);
   let sql = `select
   *,
 	buyqty-sellqty qtyinhand,
@@ -163,7 +181,32 @@ app.get('/showportfolio', (request, response) => {
           totalDayGain += rows[i].daygain;
           totalGain += rows[i].gain;
         }
+        let tdaygain = 0;
+        let tgain = 0;
+        let tvalue = 0;
+        for(let i=0; i< rows.length;i++){
+          for(let j=0; j<latestRates.length;j++){
+           if (rows[i].shareid ==  latestRates[j].shareid){
+            rows[i].price = latestRates[j].rate;
+            rows[i].marketvalue = latestRates[j].rate*rows[i].qtyinhand;
+            rows[i].changepercent = ((latestRates[j].changepct).toFixed(2))+"%";
+            rows[i].Change = latestRates[j].change;
+            rows[i].daygain = latestRates[j].change*rows[i].qtyinhand;
+            rows[i].gain = (latestRates[j].rate-rows[i].buyavg)*rows[i].qtyinhand;
+            tdaygain += rows[i].daygain;
+            tgain += rows[i].gain;
+            tvalue += rows[i].marketvalue;
+             }
+          }
+        }
+
+        for(let i=0; i<rows.length; i++){
+          rows[i].tdaygain = tdaygain;
+          rows[i].tgain = tgain;
+          rows[i].tvalue = tvalue;
+      }
         response.render('showportfolio', { rows, userData, totalBuy, totalGain, totalDayGain });
+        // response.send(rows);
       } else {
         const errormsg = {
           type: "Empty Portfolio",
