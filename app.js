@@ -173,17 +173,18 @@ app.get('/showportfolio', async (request, response) => {
       response.render('errorpage', { errormsg });
     } else {
       if (rows.length > 0) {
-        let totalBuy = 0;
-        let totalDayGain = 0;
-        let totalGain = 0;
-        for(i=0; i<rows.length; i++){
-          totalBuy += rows[i].buycost;
-          totalDayGain += rows[i].daygain;
-          totalGain += rows[i].gain;
-        }
+        // let totalBuy = 0;
+        // let totalDayGain = 0;
+        // let totalGain = 0;
+        // for(i=0; i<rows.length; i++){
+          // totalBuy += rows[i].buycost;
+          // totalDayGain += rows[i].daygain;
+          // totalGain += rows[i].gain;
+        // }
         let tdaygain = 0;
         let tgain = 0;
         let tvalue = 0;
+        let totalBuy = 0;
         for(let i=0; i< rows.length;i++){
           for(let j=0; j<latestRates.length;j++){
            if (rows[i].shareid ==  latestRates[j].shareid){
@@ -196,7 +197,8 @@ app.get('/showportfolio', async (request, response) => {
             tdaygain += rows[i].daygain;
             tgain += rows[i].gain;
             tvalue += rows[i].marketvalue;
-             }
+            totalBuy += rows[i].buycost;
+          }
           }
         }
 
@@ -205,7 +207,7 @@ app.get('/showportfolio', async (request, response) => {
           rows[i].tgain = tgain;
           rows[i].tvalue = tvalue;
       }
-        response.render('showportfolio', { rows, userData, totalBuy, totalGain, totalDayGain });
+        response.render('showportfolio', { rows, userData, totalBuy });
         // response.send(rows);
       } else {
         const errormsg = {
