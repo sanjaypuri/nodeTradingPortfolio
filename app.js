@@ -417,17 +417,19 @@ app.get('/sellregister', (request, response) => {
   });
 });
 
-app.get('/liquidity', (request, response)=>{
+app.get('/liquidity', async (request, response)=>{
   const userData = request.cookies.userData;
   if (!userData){
     response.redirect('/');
   }
-  let sql = `select Name, sum(cost) cost, sum(profit) profit, sum(cost+profit) value, 
+  const latestRates = await getLatestRates();
+  // response.send(latestRates);
+  let sql = `select id, shareid, Name, qty, sum(cost) cost, sum(profit) profit, sum(cost+profit) value, 
               sum(sum(cost)) over () totalcost,
               sum(sum(profit)) over () totalprofit,
               sum(sum(cost+profit)) over () totalvalue from
               (SELECT
-                b.id, s.Name, b.qty-ifnull(sellqty,0) qty, b.rate, s.price, b.rate*(b.qty-ifnull(sellqty,0)) cost,
+                b.id, b.shareid, s.Name, b.qty-ifnull(sellqty,0) qty, b.rate, s.price, b.rate*(b.qty-ifnull(sellqty,0)) cost,
                 (s.price-b.rate)*b.qty-ifnull(sellqty,0) profit
               FROM buy b
               left join (SELECT
@@ -446,7 +448,27 @@ app.get('/liquidity', (request, response)=>{
       }
       response.render('errorpage', { errormsg, userData });
     } else {
-        response.render('liquidity', {rows, userData});
+      // response.send(rows);
+      let totalCost = 0;
+      let totalProfit = 0;
+      let totalValue = 0;
+      for(let i=0; i< rows.length; i++){
+        for(let j=0; j< latestRates.length; j++){
+          if(rows[i].id == latestRates.shareid){
+            rows[i].profit = (latestRates[j].rate*rows[i].qty)-rows[i].cost;
+            rows[i].value = latestRates[j].rate*rows[i].qty;
+            totalCost += rows[i].cost;
+            totalProfit += rows[i].profit;
+            totalValue += rows[i].value;
+          }
+        }
+      }
+      for(let i=0; i<rows.length; i++){
+        rows[i].totalCost = totalCost;
+        rows[i].totalProfit = totalProfit;
+        rows[i].totalValue = totalValue;
+      }
+      response.render('liquidity', {rows, userData});
     }
   });
 });
