@@ -25,7 +25,7 @@
             Total Gain: 
             <%= (+(Math.round(100*(rows[0].tgain))/100).toFixed(2)).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %> 
             <span style="font-size:0.8rem">
-              <%= (totalGain*100/totalBuy).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %>%
+              <%= (rows[0].tgain*100/totalBuy).toLocaleString('en-in', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %>%
             </span>
           </div>
         <% } %>
